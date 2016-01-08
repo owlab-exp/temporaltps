@@ -3,6 +3,9 @@ apply plugin: 'java'
 // In this section you declare where to find the dependencies of your project
 repositories {
     mavenCentral()
+    maven {
+        url = 'http://oss.sonatype.org/content/repositories/snapshots/'
+    }
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
@@ -10,9 +13,8 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    //compile 'org.apache.storm:storm:0.10.0'
+    compile 'com.owlab:weakrestclient:1.1.0-SNAPSHOT'
     compile 'org.apache.storm:storm-core:0.10.0'
-    //compile 'org.apache.storm:storm-metrics:0.10.0'
     compile 'org.apache.storm:storm-kafka:0.10.0'
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.12'
