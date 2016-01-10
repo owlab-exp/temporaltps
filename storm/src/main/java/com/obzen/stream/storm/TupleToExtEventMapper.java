@@ -1,6 +1,7 @@
 package com.obzen.stream.storm;
 
 import com.obzen.common.event.ExtEvent;
+import com.obzen.common.serializer.FieldType;
 import com.obzen.common.serializer.impl.ExternalEventSerializer;
 
 import backtype.storm.tuple.Tuple;
@@ -14,10 +15,21 @@ public class TupleToExtEventMapper implements TupleToKafkaMapper<String, byte[]>
 
     private ExternalEventSerializer serializer;
 
-    // The serializer should handle the tuple's elements in ordered way
     public TupleToExtEventMapper(ExternalEventSerializer serializer) {
         this.serializer = serializer;
     }
+    //// The serializer should handle the tuple's elements in ordered way
+    //public TupleToExtEventMapper() {
+    //    this.serializer = ExternalEventSerializer.builder()
+    //        .addDataFieldType(FieldType.STRING) //zip
+    //        .addDataFieldType(FieldType.STRING) //country
+    //        .addDataFieldType(FieldType.STRING) //...
+    //        .addDataFieldType(FieldType.STRING)
+    //        .addDataFieldType(FieldType.STRING)
+    //        .addDataFieldType(FieldType.LONG) //id
+    //        .addDataFieldType(FieldType.LONG) //mtime
+    //        .build();
+    //}
 
     @Override
     public String getKeyFromTuple(Tuple tuple) {

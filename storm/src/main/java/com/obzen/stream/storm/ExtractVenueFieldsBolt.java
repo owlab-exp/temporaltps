@@ -22,17 +22,18 @@ public class ExtractVenueFieldsBolt extends BaseRichBolt {
 
     private OutputCollector collector;
 
-    private JSONParser parser = new JSONParser();
+    private JSONParser parser; //= new JSONParser();
 
     @Override
     public void prepare(Map conf, TopologyContext context, OutputCollector _collector) {
         collector = _collector;
+        parser = new JSONParser();
     }
     
     @Override
     public void execute(Tuple tuple) {
         String jsonStr = tuple.getString(0);
-        logger.debug(jsonStr);
+        logger.info("tuple:0: {}" + jsonStr);
 
         Object obj = null;
         try {
@@ -43,13 +44,13 @@ public class ExtractVenueFieldsBolt extends BaseRichBolt {
 
         JSONObject json = (JSONObject)obj; //JSONObject => Map
         collector.emit(tuple, new Values(
-                    json.get("zip"),
-                    json.get("country"),
-                    json.get("city"),
-                    json.get("address_1"),
-                    json.get("name"),
-                    json.get("id"),
-                    json.get("mtime")
+                    (String) json.get("zip"),
+                    (String) json.get("country"),
+                    (String) json.get("city"),
+                    (String) json.get("address_1"),
+                    (String) json.get("name"),
+                    (Long) json.get("id"),
+                    (Long) json.get("mtime")
                     ));
 
         collector.ack(tuple);

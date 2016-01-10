@@ -9,10 +9,14 @@ dependencies {
     compile 'org.apache.storm:storm-core:0.10.0'
     compile 'org.apache.storm:storm-kafka:0.10.0'
     compile("org.apache.kafka:kafka_2.11:0.8.2.2") {
-        exclude module: 'zookeeper,log4j'
+        exclude module: 'zookeeper'
+        exclude module: 'log4j'
     }
     compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
 
     // From maven local repository!
-    compile 'com.obzen:event-serializer:3.0.0-SNAPSHOT'
+    compile('com.obzen:event-serializer:3.0.0-SNAPSHOT') {
+        exclude module: 'slf4j-api'
+        exclude module: 'slf4j-log4j12'
+    }
 }

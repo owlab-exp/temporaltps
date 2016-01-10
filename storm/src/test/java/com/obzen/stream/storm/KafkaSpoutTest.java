@@ -46,8 +46,8 @@ public class KafkaSpoutTest {
     public void testKafkaSpout() {
         // Prepare Core KafkaSpout
         BrokerHosts brokers =  new ZkHosts(zkHosts);
-        //SpoutConfig spoutConfig = new SpoutConfig(brokers, src_topic, "/" + src_topic, UUID.randomUUID().toString());
-        SpoutConfig spoutConfig = new SpoutConfig(brokers, src_topic, "/" + src_topic, "example_client");
+        SpoutConfig spoutConfig = new SpoutConfig(brokers, src_topic, "/" + src_topic, UUID.randomUUID().toString());
+        //SpoutConfig spoutConfig = new SpoutConfig(brokers, src_topic, "/" + src_topic, "example_client");
         //KafkaConfig spoutConfig = new KafkaConfig(brokers, src_topic, "example_client");
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
@@ -71,7 +71,7 @@ public class KafkaSpoutTest {
             .addDataFieldType(FieldType.STRING) //...
             .addDataFieldType(FieldType.STRING)
             .addDataFieldType(FieldType.STRING)
-            .addDataFieldType(FieldType.STRING)
+            .addDataFieldType(FieldType.LONG) //id
             .addDataFieldType(FieldType.LONG) //mtime
             .build();
 
@@ -84,7 +84,7 @@ public class KafkaSpoutTest {
 
         Config conf = new Config();
         conf.setDebug(true);
-        conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props); // version 0.10.0
+        //conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props); // version 0.10.0
 
         //if (args != null && args.length > 0) {
         //   conf.setNumWorkers(2);
