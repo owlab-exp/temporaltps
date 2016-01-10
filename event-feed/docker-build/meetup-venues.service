@@ -16,6 +16,8 @@ ExecStart=/usr/bin/bash -c \
             -e KAFKA_CLIENT_ID=meetup_client \
             obzen-reg:5000/obzen/event-feed:0.8"
 ExecStop=/usr/bin/docker stop %p
+Restart=on-failure
+RestartSec=30
 SuccessExitStatus=143
 TimeoutSec=900s
 

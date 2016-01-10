@@ -1,0 +1,18 @@
+version '0.8-SNAPSHOT'
+
+ext {
+    kafkaClientVersion = '0.8.2.2'
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile 'org.apache.storm:storm-core:0.10.0'
+    compile 'org.apache.storm:storm-kafka:0.10.0'
+    compile("org.apache.kafka:kafka_2.11:0.8.2.2") {
+        exclude module: 'zookeeper,log4j'
+    }
+    compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
+
+    // From maven local repository!
+    compile 'com.obzen:event-serializer:3.0.0-SNAPSHOT'
+}
