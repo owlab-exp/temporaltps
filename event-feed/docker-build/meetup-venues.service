@@ -1,0 +1,23 @@
+[Unit]
+Description=MeetUp Venues Stream
+After=docker.service flanneld.service
+Requires=docker.service flanneld.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStartPre=-/usr/bin/docker pull obzen-reg:5000/obzen/event-feed:0.8
+ExecStart=/usr/bin/bash -c \
+            "KAFKA_URLS=$(fleetctl list-machines -no-legend=true -fields=ip | awk '{print $1\":9092\"}' | tr '\n' ',' | sed s'/,$//') \
+            && exec /usr/bin/docker run --rm --name %p \
+            -e MEETUP_ENDPOINT="http://stream.meetup.com/2/open_venues?trickle" \
+            -e KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URLS \
+            -e KAFKA_TOPIC=meetup_venues \
+            -e KAFKA_CLIENT_ID=meetup_client \
+            obzen-reg:5000/obzen/event-feed:0.8"
+ExecStop=/usr/bin/docker stop %p
+SuccessExitStatus=143
+TimeoutSec=900s
+
+[X-Fleet]
+MachineMetadata=machine-id=1
