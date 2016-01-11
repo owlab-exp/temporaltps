@@ -1,0 +1,23 @@
+apply plugin: 'application'
+
+version '0.8-SNAPSHOT'
+
+mainClassName = 'com.obzen.stream.reader.KafkaTopicConsumer'
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    //compile "org.apache.kafka:kafka_2.11:0.8.2.2"
+    //compile("org.apache.kafka:kafka_2.11:0.8.2.2") {
+    //    exclude module: 'zookeeper'
+    //    exclude module: 'log4j'
+    //}
+    //compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
+
+    // From maven local repository!
+    compile 'com.obzen:cep-event-serializer:3.0.0-SNAPSHOT'
+    //compile('com.obzen:cep-event-serializer:3.0.0-SNAPSHOT') {
+    //    exclude module: 'slf4j-api'
+    //    exclude module: 'slf4j-log4j12'
+    //}
+    compile 'com.obzen:cep-kafka:3.0.0-SNAPSHOT'
+}

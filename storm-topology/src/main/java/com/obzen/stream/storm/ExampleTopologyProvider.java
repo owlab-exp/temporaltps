@@ -44,6 +44,7 @@ import java.util.UUID;
 public class ExampleTopologyProvider implements Serializable {
     private static String zkHosts = "192.168.10.82:2181"; // For sourcing
     private static String kafkaHosts = "172.17.8.101:9092"; //For sinking
+    //private static String kafkaHosts = "192.168.10.82:9092"; //For sinking
     private static String src_topic = "meetup_venues";
     private static String sink_topic = "venues_parsed";
 
@@ -61,7 +62,7 @@ public class ExampleTopologyProvider implements Serializable {
         builder.setSpout("venues", kafkaSpout, 1);
 
         // Set bolt for lines to fields
-        builder.setBolt("extractFields", new ExtractVenueFieldsBolt(), 2).shuffleGrouping("venues");
+        builder.setBolt("extractFields", new ExtractVenueFieldsBolt(), 1).shuffleGrouping("venues");
 
         // Kafka Sink bolt
         // Serialization for CEP consumer
@@ -98,7 +99,7 @@ public class ExampleTopologyProvider implements Serializable {
         props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props); // version 0.10.0
 
-        conf.setNumWorkers(3);
+        conf.setNumWorkers(1);
         // Submit to remote Storm cluster
         StormSubmitter.submitTopology("meetup-topology", conf, topologyToDeploy);
     }

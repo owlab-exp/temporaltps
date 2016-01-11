@@ -40,7 +40,7 @@ dependencies {
     compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
 
     // From maven local repository!
-    compile('com.obzen:event-serializer:3.0.0-SNAPSHOT') {
+    compile('com.obzen:cep-event-serializer:3.0.0-SNAPSHOT') {
         exclude module: 'slf4j-api'
         exclude module: 'slf4j-log4j12'
     }

@@ -1,0 +1,28 @@
+apply plugin: 'application'
+
+mainClassName = 'com.obzen.cep.AdminRestAPITester'
+
+repositories {
+    mavenLocal()
+
+    maven {
+      url = 'http://oss.sonatype.org/content/repositories/snapshots/'
+    }
+
+    // for siddhi
+    maven {
+      url = 'http://maven.wso2.org/nexus/content/groups/wso2-public/'
+    }
+    maven {
+      url = 'http://maven.wso2.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+      url = 'http://maven.wso2.org/nexus/content/repositories/releases/'
+    }
+}
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile 'com.obzen:cep-core:3.0.0-SNAPSHOT'
+    compile 'com.obzen:cep-event-processor:3.0.0-SNAPSHOT'
+    compile 'com.owlab:weakrestclient:1.1.0-SNAPSHOT'
+}
