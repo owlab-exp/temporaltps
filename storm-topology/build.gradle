@@ -1,4 +1,29 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.2'
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+}
+
 version '0.8-SNAPSHOT'
+
+mainClassName = 'com.obzen.stream.storm.ExampleTopologyProvider'
+
+jar {
+    manifest {
+        attributes 'Main-Class' : mainClassName
+    }
+}
 
 ext {
     kafkaClientVersion = '0.8.2.2'
@@ -6,7 +31,7 @@ ext {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    compile 'org.apache.storm:storm-core:0.10.0'
+    provided 'org.apache.storm:storm-core:0.10.0'
     compile 'org.apache.storm:storm-kafka:0.10.0'
     compile("org.apache.kafka:kafka_2.11:0.8.2.2") {
         exclude module: 'zookeeper'

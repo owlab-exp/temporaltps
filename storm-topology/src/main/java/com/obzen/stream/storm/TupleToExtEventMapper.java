@@ -13,23 +13,11 @@ import org.slf4j.LoggerFactory;
 public class TupleToExtEventMapper implements TupleToKafkaMapper<String, byte[]> {
     private static final Logger logger = LoggerFactory.getLogger(TupleToExtEventMapper.class);
 
-    private ExternalEventSerializer serializer;
+    protected ExternalEventSerializer serializer;
 
     public TupleToExtEventMapper(ExternalEventSerializer serializer) {
         this.serializer = serializer;
     }
-    //// The serializer should handle the tuple's elements in ordered way
-    //public TupleToExtEventMapper() {
-    //    this.serializer = ExternalEventSerializer.builder()
-    //        .addDataFieldType(FieldType.STRING) //zip
-    //        .addDataFieldType(FieldType.STRING) //country
-    //        .addDataFieldType(FieldType.STRING) //...
-    //        .addDataFieldType(FieldType.STRING)
-    //        .addDataFieldType(FieldType.STRING)
-    //        .addDataFieldType(FieldType.LONG) //id
-    //        .addDataFieldType(FieldType.LONG) //mtime
-    //        .build();
-    //}
 
     @Override
     public String getKeyFromTuple(Tuple tuple) {
@@ -46,7 +34,9 @@ public class TupleToExtEventMapper implements TupleToKafkaMapper<String, byte[]>
 
         try {
             result = serializer.serializeArray(extEvents);
+            logger.info("Serialized Size: {}", result.length);
         } catch(Exception e) {
+            logger.error("Exception while serializing a tuple: {}", e.getMessage());
             e.printStackTrace();
         }
 
