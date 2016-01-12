@@ -19,9 +19,13 @@ CEP가 읽어들일 수 있는 형태의 byte array로 convert하여 Kafka (topi
 원격에서 실행중인 Storm에 토폴로지를 deploy하기 위해서는,
 
 > ```gradle shadowJar```
+
 > ```storm jar ./build/libs/storm-topology-0.8-SNAPSHOT-all.jar  com.obzen.stream.storm.ExampleTopologyProvider```
+
 > ```...``
+
 > ```storm list`` 
+
 > ```storm kill <topology name>`` 
 
 ## cep-query
