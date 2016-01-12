@@ -24,9 +24,9 @@ CEP가 읽어들일 수 있는 형태의 byte array로 convert하여 Kafka (topi
 
 > ```...``
 
-> ```storm list`` 
+> ```storm list``` 
 
-> ```storm kill <topology name>`` 
+> ```storm kill <topology name>```
 
 ## cep-query
 
