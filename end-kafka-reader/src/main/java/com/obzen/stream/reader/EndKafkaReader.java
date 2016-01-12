@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class KafkaTopicConsumer {
+public class EndKafkaReader {
 
     public static void main(String[] args) {
         // Prepare event serializers in ordered way

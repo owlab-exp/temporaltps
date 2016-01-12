@@ -17,7 +17,7 @@ include 'services:webservice'
 */
 
 rootProject.name = 'stream-processing-tutorial'
-include 'event-feed'
+include 'event-feeder'
 include 'storm-topology'
-include 'obzen-cep'
+include 'cep-query'
 include 'end-kafka-reader'
