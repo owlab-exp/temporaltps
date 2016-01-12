@@ -42,9 +42,9 @@ import java.util.Properties;
 import java.util.UUID;
 
 public class ExampleTopologyProvider implements Serializable {
-    private static String zkHosts = "192.168.10.82:2181"; // For sourcing
+    private static String zkHosts = "172.17.8.101:2181"; // For sourcing
     private static String kafkaHosts = "172.17.8.101:9092"; //For sinking
-    //private static String kafkaHosts = "192.168.10.82:9092"; //For sinking
+    //private static String kafkaHosts = "172.17.8.101:9092"; //For sinking
     private static String src_topic = "meetup_venues";
     private static String sink_topic = "venues_parsed";
 
