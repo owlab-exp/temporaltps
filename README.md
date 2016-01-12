@@ -12,9 +12,12 @@ CEP가 읽어들일 수 있는 형태의 byte array로 convert하여 Kafka (topi
 - Kafka Spout: read from Kafka
 - ExtractVenueFieldsBolt: parse lines to JSON object and extrace fields - 'zip', 'country', ...
 - Kafka Bolt: read field values and serialize the values for CEP, and send to Kafka
-로컬 컴퓨터에서 실행하려면, 필요하다면 ExampleTopologyProvider.java 와 ExampleTopologyTest를 편집한 후, 다음 명령을 이용:
+로컬 컴퓨터에서 실행하려면, 필요하다면 ExampleTopologyProvider.java 와 ExampleTopologyTest를 편집한 후, 다음 명령을 이용: 
+
 > ```gradle cleanTest test```
-원경에서 실행중인 Storm에 토폴로지를 deploy하기 위해서는,
+
+원격에서 실행중인 Storm에 토폴로지를 deploy하기 위해서는,
+
 > ```gradle shadowJar``
 > ```storm jar ./build/libs/storm-topology-0.8-SNAPSHOT-all.jar  com.obzen.stream.storm.ExampleTopologyProvider```
 > ```...``
