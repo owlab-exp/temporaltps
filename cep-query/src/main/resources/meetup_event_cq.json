@@ -11,7 +11,7 @@
         "config" : {
             "inputPorts" : [ {
                 "adapterProviderName" : "KafkaAdapterProvider",
-                "portName" : "venues_parsed",
+                "portName" : "venues_parsed_new",
                 "streamId" : "venueStream"
             } ],
             "outputPorts" : [ {

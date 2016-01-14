@@ -2,6 +2,12 @@ apply plugin: 'application'
 
 mainClassName = 'com.obzen.cep.AdminRestAPITester'
 
+run {
+    if(project.hasProperty('args')) {
+        args project.args.split("\\s+")
+    }
+}
+
 repositories {
     mavenLocal()
 
@@ -23,6 +29,8 @@ repositories {
 // In this section you declare the dependencies for your production and test code
 dependencies {
     compile 'com.obzen:cep-core:3.0.0-SNAPSHOT'
-    compile 'com.obzen:cep-event-processor:3.0.0-SNAPSHOT'
+    //compile 'com.obzen:cep-event-processor:3.0.0-SNAPSHOT'
+    compile 'com.obzen:cep-core:3.0.0-SNAPSHOT'
     compile 'com.owlab:weakrestclient:1.1.0-SNAPSHOT'
+    compile 'net.sf.jopt-simple:jopt-simple:4.9'
 }

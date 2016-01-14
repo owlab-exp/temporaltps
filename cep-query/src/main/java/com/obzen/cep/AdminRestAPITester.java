@@ -4,12 +4,17 @@ import com.obzen.cep.core.definition.ComponentDefinition;
 import com.obzen.cep.core.definition.DefinitionId;
 import com.obzen.cep.core.definition.DefinitionMeta;
 import com.obzen.cep.core.definition.StartupOptions;
-import com.obzen.cep.core.deployment.*;
 import com.obzen.cep.core.util.JsonUtil;
-import com.obzen.cep.eventprocessor.EventProcessorConfig;
+//import com.obzen.cep.eventprocessor.EventProcessorConfig;
 import com.owlab.restful.weakrest.WeakRestClient;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+import joptsimple.OptionSpecBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,19 +29,45 @@ import java.nio.file.Path;
 
 public class AdminRestAPITester {
 
-    private static final String baseUrl = "http://172.17.8.101:8082/rest/nodes/";
-    private static final String nodeId = "node.172.17.8.101.5800";
-    //private static final String baseUrl = "http://localhost:8082/rest/nodes/";
-    //private static final String nodeId = "node.localhost.5800";
     //private static final String baseUrl = "http://192.168.10.83:8082/rest/nodes/";
     //private static final String nodeId = "node.192.168.10.83.5800";
-    private static final String targetUrl = baseUrl + nodeId + "/services";
+    ////private static final String baseUrl = "http://localhost:8082/rest/nodes/";
+    ////private static final String nodeId = "node.localhost.5800";
+    ////private static final String baseUrl = "http://192.168.10.83:8082/rest/nodes/";
+    ////private static final String nodeId = "node.192.168.10.83.5800";
+    //private static final String targetUrl = baseUrl + nodeId + "/services";
 
     public static void main(String... args) throws Exception {
+        //Parse arguments
+        OptionParser parser = new OptionParser();
+        OptionSpec<String> restHost = parser.accepts("e").withRequiredArg().ofType(String.class).describedAs("RESTful endPoint host-port, ex: 192.168.10.83:8082");
+        OptionSpec<String> node = parser.accepts("n").withRequiredArg().ofType(String.class).describedAs("Node ID, ex: node.192.168.10.83.5800");
+        OptionSpec<String> compJson = parser.accepts("j").withRequiredArg().ofType(String.class).describedAs("a component json file path, ex: resources/example_component.json");
+        OptionSpec<String> cmd = parser.accepts("c").withRequiredArg().ofType(String.class).describedAs("start or stop");
+
+        OptionSet options = parser.parse(args);
+        
+        if(!(options.has(restHost) && options.hasArgument(restHost) && 
+                    options.has(node) && options.hasArgument(node) &&
+                    options.has(compJson) && options.hasArgument(compJson) &&
+                    options.has(cmd) && options.hasArgument(cmd))) {
+            parser.printHelpOn(System.out);
+            System.exit(0);
+        } 
+
+        String targetUrl = "http://" + options.valueOf(restHost) + "/rest/nodes/" + options.valueOf(node) + "/services";
+        System.out.println("Given target service: " + targetUrl);
+        String filePath = options.valueOf(compJson);
+        String command = options.valueOf(cmd);
 
         AdminRestAPITester tester = new AdminRestAPITester();
-        tester.startComponents();
-        //tester.stopComponents();
+        
+        if(command.equalsIgnoreCase("start")) {
+            tester.startComponents(targetUrl, filePath);
+        } else if(command.equalsIgnoreCase("stop")) {
+            tester.stopComponents(targetUrl, filePath);
+        }
+
     }
 
     private String readFile(String filePath) {
@@ -52,40 +83,45 @@ public class AdminRestAPITester {
         return result;
     }
 
-    public void startComponents() throws Exception {
+    public void startComponents(String targetUrl, String filePath) throws Exception {
 
-        String fileUri = AdminRestAPITester.class.getClassLoader().getResource("meetup_event_cq.json").toURI().toString();
-        String content = readFile(fileUri.split(":")[1]);
+        //String fileUri = AdminRestAPITester.class.getClassLoader().getResource("meetup_event_cq.json").toURI().toString();
+        //String content = readFile(fileUri.split(":")[1]);
+        String content = readFile(filePath);
 
         JsonObject compDefJson = new JsonObject(content);
 
+        System.out.println("Following will be submitted");
+        System.out.println("============================");
         System.out.println(compDefJson.encodePrettily());
+        System.out.println("============================");
 
         ComponentDefinition epCompDef = ComponentDefinition.fromJson(compDefJson);
         //Test start 
         WeakRestClient.RestResponse res21 = WeakRestClient.put(targetUrl)
             .body(new JsonObject().put("body", new JsonArray().add(epCompDef.toJson())).toString())
             .execute();
+        System.out.println(res21.responseBody);
     }
 
-    public void stopComponents() throws Exception {
-        //assertThat(res21.statusCode, is(200));
+    public void stopComponents(String targetUrl, String filePath) throws Exception {
+        String content = readFile(filePath);
+        JsonObject compDefJson = new JsonObject(content);
+        String defId = getDefId(compDefJson);
+        System.out.println("Stopping a component with definition Id: " + defId);
 
-        // //Test get 
-        // WeakRestClient.RestResponse res22 = WeakRestClient.get(targetUrl)
-        //         .execute();
-        // assertThat(res22.statusCode, is(200));
-        // System.out.println("Running deployments: \n" + new JsonObject(res22.responseBody).encodePrettily());
-
-        ////Test stop with invalid id
-        //WeakRestClient.RestResponse res23 = WeakRestClient.delete(targetUrl + "/sampleEventProcessor:0.0")
-        //        .execute();
-        //System.out.println("Status code: " + res23.statusCode);
-        //System.out.println("Reply: \n" + new JsonObject(res23.responseBody).encodePrettily());
-
-        //Test stop 
-        WeakRestClient.RestResponse res24 = WeakRestClient.delete(targetUrl + "/" + "meetup-event-cq:0.1")
+        WeakRestClient.RestResponse res24 = WeakRestClient.delete(targetUrl + "/" + defId)
             .execute();
-        //assertThat(res24.statusCode, is(200));
+        System.out.println(res24.responseBody);
+    }
+
+    private String getDefId(JsonObject compDefJson) {
+        JsonObject defMetaJson = compDefJson.getJsonObject("definitionMeta");
+        JsonObject defIdJson = defMetaJson.getJsonObject("definitionId");
+        String defName = defIdJson.getString("name");
+        String defVersion = defIdJson.getString("version");
+
+        String defId = defName + ":" + defVersion;
+        return defId;
     }
 }

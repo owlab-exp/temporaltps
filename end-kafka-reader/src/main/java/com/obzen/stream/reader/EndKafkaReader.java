@@ -23,8 +23,8 @@ public class EndKafkaReader {
         // Consume events
         String topic = "country_city";
         Properties props = new Properties();
-        props.setProperty("zk.urls", "172.17.8.101:2181");
-        props.setProperty("kafka.urls", "172.17.8.101:9092");
+        props.setProperty("zk.urls", "192.168.10.82:2181");
+        props.setProperty("kafka.urls", "192.168.10.82:9092");
         props.setProperty("kafka.group.id", "test-consumer-01");
         KafkaTopicReader topicReader = new KafkaTopicDisruptReader(topic, props) {
             @Override
@@ -152,14 +152,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
         String groupId = "ocep-kafka-group";
         String clientId = "ocep-kafka-client";
-        //String brokerHost = "172.17.8.101";
+        //String brokerHost = "192.168.10.82";
         //int brokerPort = 9092;
 
 
         // Produce events
         String outTopic = "sampleInName0";
         Properties p_props = new Properties();
-        p_props.put("bootstrap.servers", "172.17.8.101:9092");
+        p_props.put("bootstrap.servers", "192.168.10.82:9092");
         p_props.put("acks", "1");
         p_props.put("buffer.memory", "33554432");
         p_props.put("batch.size", "16384");

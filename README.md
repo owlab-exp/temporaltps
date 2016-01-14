@@ -34,5 +34,10 @@ CEP가 읽어들일 수 있는 형태의 byte array로 convert하여 Kafka (topi
 ## cep-query
 Storm 의 처리결과를 읽어들여, Siddhi CEP 쿼리를 수행
 
+Start a component definition
+```gradle run -Pargs="-c start -e 192.168.10.82:8082 -n node.192.168.10.83.5800 -j ./src/main/resources/meetup_event_cq.json"```
+Stop a component definition
+```gradle run -Pargs="-c stop -e 192.168.10.82:8082 -n node.192.168.10.83.5800 -j ./src/main/resources/meetup_event_cq.json"```
+
 ## end-kafka-reader
 CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader
