@@ -53,7 +53,9 @@ MeetUp Stream API들 중 하나(http://stream.meetup.com/2/open_venues?trickle)�
 event-feeder 디렉토리에서;
 
 > gradle distTar
+
 > cd docker-build
+
 > ./repub.sh
 
 - ```gradle distTar```는 docker image를 만들 때 사용할 프로그램 및 연관 라이브러리의 tar archive를 생성하기 위한 것이며, 
@@ -71,7 +73,9 @@ Docker registry에 있는 이미지를 CoreOS에서 실행하기 위해서는 **
 (필요하다면, 이 파일을 편집하여 셋팅을 바꾸고) 아래와 같은 fleetctl 명령으로 CoreOS에서 실행한다. 
 docker-build 디렉토리 안에서;
 > fleetctl submit meetup-venues
+
 > fleetctl load meetup-venues
+
 > fleetctl start meetup-venues
 
 그리고 ```fleetctl journal -f meetup-venues``` 명령으로 실행상태를 확인해볼 수 있다.
