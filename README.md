@@ -18,6 +18,7 @@ Vagrant를 이용하여 CoreOS VM이 실행되고 있고, 그 위에 Zookeeper, 
 또한, 이 CoreOS 외부에서 fleetctl로 서비스들을 컨트롤하기 위해서는 다음의 명령이 미리 실행되어야 한다.
 
 > export FLEETCTL_TUNNEL=172.17.8.101:22
+
 > ssh-add ~/.vagrant.d/insecure_private_key
 
 ## event-feeder
