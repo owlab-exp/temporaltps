@@ -16,6 +16,7 @@
 이하 각 서프 프로젝트들에 대한 설명은 Linux에서 테스트할 때를 기준으로 하고 있으며,
 Vagrant를 이용하여 CoreOS VM이 실행되고 있고, 그 위에 Zookeeper, Kafka, Storm, Cassandra, 그리고 obzenCEP가 docker container들로서 운영되고 있을 때를 전제로 하고 있다.
 또한, 이 CoreOS 외부에서 fleetctl로 서비스들을 컨트롤하기 위해서는 다음의 명령이 미리 실행되어야 한다.
+
 > export FLEETCTL_TUNNEL=172.17.8.101:22
 > ssh-add ~/.vagrant.d/insecure_private_key
 
