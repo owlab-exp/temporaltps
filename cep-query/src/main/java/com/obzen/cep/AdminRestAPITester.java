@@ -29,14 +29,6 @@ import java.nio.file.Path;
 
 public class AdminRestAPITester {
 
-    //private static final String baseUrl = "http://192.168.10.83:8082/rest/nodes/";
-    //private static final String nodeId = "node.192.168.10.83.5800";
-    ////private static final String baseUrl = "http://localhost:8082/rest/nodes/";
-    ////private static final String nodeId = "node.localhost.5800";
-    ////private static final String baseUrl = "http://192.168.10.83:8082/rest/nodes/";
-    ////private static final String nodeId = "node.192.168.10.83.5800";
-    //private static final String targetUrl = baseUrl + nodeId + "/services";
-
     public static void main(String... args) throws Exception {
         //Parse arguments
         OptionParser parser = new OptionParser();

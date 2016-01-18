@@ -1,41 +1,41 @@
-{
-    "definitionMeta" : {
-        "definitionId" : {
-            "name" : "meetup-event-cq",
-            "version" : "0.1"
+    {
+        "definitionMeta" : {
+            "definitionId" : {
+                "name" : "meetup-event-cq",
+                "version" : "0.1"
+            },
+            "description" : "For fun"
         },
-        "description" : "For fun"
-    },
-    "service" : "ocep.EventProcessor",
-    "startupOptions" : {
-        "config" : {
-            "inputPorts" : [ {
-                "adapterProviderName" : "KafkaAdapterProvider",
-                "portName" : "venues_parsed",
-                "streamId" : "venueStream"
-            } ],
-            "outputPorts" : [ {
-                "adapterProviderName" : "KafkaAdapterProvider",
-                "portName" : "country_city",
-                "streamId" : "cqOut_0"
-            } ],
-            "executionPlan" : [ 
-                                "@Plan:name('SimpleVenueCQ01')", 
-                                "define stream venueStream (zip string, country string, city string, address_1 string, name string, id long, mtime long);", 
-                                "partition with (country of venueStream)", 
-                                "begin", 
-                                "   @info(name = 'query') ", 
-                                "   from venueStream#window.time(1 min)", 
-                                "   select country, city, count(city) as cityCount", 
-                                "   group by country, city", 
-                                "   insert into cqOut_0 ;", 
-                                "end;" 
-            ],
-            "useJunction" : false,
-            "snapshotIntervalMinutes" : 1,
-            "snapshotExpireMinutes" : 1440,
-            "distributedExecution" : false,
-            "enableStatistics" : false
+        "service" : "ocep.EventProcessor",
+        "startupOptions" : {
+            "config" : {
+                "inputPorts" : [ {
+                    "adapterProviderName" : "KafkaAdapterProvider",
+                    "portName" : "meetup_venue_events",
+                    "streamId" : "venueStream"
+                } ],
+                "outputPorts" : [ {
+                    "adapterProviderName" : "KafkaAdapterProvider",
+                    "portName" : "meetup_venue_out",
+                    "streamId" : "countryAndCityStream"
+                } ],
+                "executionPlan" : [ 
+                                    "@Plan:name('SimpleVenueCQ01')", 
+                                    "define stream venueStream (zip string, country string, city string, address_1 string, name string, id long, mtime long);", 
+                                    "partition with (country of venueStream)", 
+                                    "begin", 
+                                    "   @info(name = 'query') ", 
+                                    "   from venueStream#window.time(1 min)", 
+                                    "   select country, city, count(city) as cityCount", 
+                                    "   group by country, city", 
+                                    "   insert into countryAndCityStream ;", 
+                                    "end;" 
+                ],
+                "useJunction" : false,
+                "snapshotIntervalMinutes" : 1,
+                "snapshotExpireMinutes" : 1440,
+                "distributedExecution" : false,
+                "enableStatistics" : false
+            }
         }
     }
-}
