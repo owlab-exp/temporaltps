@@ -8,12 +8,12 @@ FROM obzen-reg:5000/obzen/alpine-oracle-jdk8-stripped:3.3
 RUN apk --update add bash && rm -rf /var/cache/apk/*
 
 # from the tar archive
-COPY  ./event-feed-0.8-SNAPSHOT.tar /tmp/event-feed-0.8-SNAPSHOT.tar
+COPY  ./event-feeder-0.8-SNAPSHOT.tar /tmp/event-feeder-0.8-SNAPSHOT.tar
 
-RUN tar xvf /tmp/event-feed-0.8-SNAPSHOT.tar -C /opt \
-    && ln -s /opt/event-feed-0.8-SNAPSHOT /opt/event-feed \
-    && rm /tmp/event-feed-0.8-SNAPSHOT.tar
+RUN tar xvf /tmp/event-feeder-0.8-SNAPSHOT.tar -C /opt \
+    && ln -s /opt/event-feeder-0.8-SNAPSHOT /opt/event-feeder \
+    && rm /tmp/event-feeder-0.8-SNAPSHOT.tar
 
-WORKDIR /opt/event-feed
+WORKDIR /opt/event-feeder
 
-CMD ["/opt/event-feed/bin/event-feed"]
+CMD ["/opt/event-feeder/bin/event-feeder"]
