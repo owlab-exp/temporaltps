@@ -21,6 +21,19 @@ dependencies {
 
 mainClassName = 'com.obzen.stream.consumer.MeetUpStreamConsumer'
 
+// Not work!
+//applicationDefaultJvmArgs = ["-DMEETUP_ENDPOINT=\"http://stream.meetup.com/2/open_venues?trickle\"", 
+//                             "-DKAFKA_BOOTSTRAP_SERVERS=172.17.8.101:9092", 
+//                             "-DKAFKA_TOPIC=meetup_venue_lines", 
+//                             "-DKAFKA_CLIENT_ID=meetup_client"]
+run {
+    environment "MEETUP_ENDPOINT", "http://stream.meetup.com/2/open_venues?trickle" 
+    environment "KAFKA_BOOTSTRAP_SERVERS", "172.17.8.101:9092" 
+    environment "KAFKA_TOPIC", "meetup_venue_lines"
+    environment "KAFKA_CLIENT_ID", "meetup_client"
+}
+
+
 // Redefine where 'tar' should place the resulted Tar file
 distTar {
     destinationDir = file('docker-build')

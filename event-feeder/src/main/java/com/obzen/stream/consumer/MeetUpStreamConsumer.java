@@ -107,11 +107,11 @@ public class MeetUpStreamConsumer {
 
     public static void checkEnv() {
         if(Stream.<String>of(requiredEnvVars)
-            .peek(key -> logger.info("Checking {}", key))
+            .peek(key -> logger.info("Required Env. Key {}={}", key, env.get(key)))
             .filter(key -> !env.containsKey(key))
             .findAny()
             .isPresent()) {
-            throw new RuntimeException("One or more required environment variables are missing");
+                throw new RuntimeException("One or more required environment variables are missing");
             }
     }
 }

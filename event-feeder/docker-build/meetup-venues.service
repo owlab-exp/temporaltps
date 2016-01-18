@@ -12,7 +12,7 @@ ExecStart=/usr/bin/bash -c \
             && exec /usr/bin/docker run --rm --name %p \
             -e MEETUP_ENDPOINT="http://stream.meetup.com/2/open_venues?trickle" \
             -e KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URLS \
-            -e KAFKA_TOPIC=meetup_venues \
+            -e KAFKA_TOPIC=meetup_venue_lines \
             -e KAFKA_CLIENT_ID=meetup_client \
             obzen-reg:5000/obzen/event-feed:0.8"
 ExecStop=/usr/bin/docker stop %p
