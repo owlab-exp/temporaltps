@@ -15,11 +15,13 @@
 ## Before proceed
 이하 각 서프 프로젝트들에 대한 설명은 Linux에서 테스트할 때를 기준으로 하고 있으며,
 Vagrant를 이용하여 CoreOS VM이 실행되고 있고, 그 위에 Zookeeper, Kafka, Storm, Cassandra, 그리고 obzenCEP가 docker container들로서 운영되고 있을 때를 전제로 하고 있다.
-또한, 이 CoreOS 외부에서 fleetctl로 서비스들을 컨트롤하기 위해서는 다음의 명령이 미리 실행되어야 한다.
+이 CoreOS VM 외부에서 fleetctl로 서비스들을 컨트롤하기 위해서는 다음의 명령이 미리 실행되어야 한다.
 
 > export FLEETCTL_TUNNEL=172.17.8.101:22
 
 > ssh-add ~/.vagrant.d/insecure_private_key
+
+또한, 호스트 obzen-reg 에 대한 IP Address가 /etc/hosts에 명시되어 있고, 그 호스트에서 docker registry가 운영되고 있어야 한다.
 
 ## event-feeder
 ### Stream source
@@ -79,7 +81,7 @@ docker-build 디렉토리 안에서;
 > fleetctl start meetup-venues
 
 그리고 ```fleetctl journal -f meetup-venues``` 명령으로 실행상태를 확인해볼 수 있다.
-이 서비스를 중단하기 위해서는,
+이 서비스를 중단하기 위해서는 아래의 fleetctl 명령을 이용한다.
 > fleetctl stop meetup-venues
 
 ## storm-topology
