@@ -85,28 +85,53 @@ docker-build 디렉토리 안에서;
 > fleetctl stop meetup-venues
 
 ## storm-topology
-Kafka에서 이벤트 데이터(string)를 읽어들여 필드들(zip, country, city, ...)로 구분하는 작업을 담당.
-CEP가 읽어들일 수 있는 형태의 byte array로 convert하여 Kafka (topic: venue_parsed)_에 전송. 
-샘플 토폴로지는 하나의 Spout와 두 개의 Bolt로 이루어짐: 
-- Kafka Spout: read from Kafka
-- ExtractVenueFieldsBolt: parse lines to JSON object and extract fields - 'zip', 'country', ... 
-- Kafka Bolt: read field values and serialize the values for CEP, and send to Kafka
-로컬 컴퓨터에서 실행하려면, 필요하다면 ExampleTopologyProvider.java 와 ExampleTopologyTest를 편집한 후, 다음 명령을 이용: 
+### Sample Topology
+이 서브 프로젝트의 주요 프로그램 소스는 **SimpleMeetUpParseTopology.java** 이다.
+이 소스를 열어보면,
+ 
+* **KafkaSpout**: Kafka의 특정 topic으로부터 데이터를 읽어들이는 Spout
+* **ExtractVenueFieldsBolt**: ***KafkaSpout***의 출력 데이터를 JsonObject로 바꾸어 **zip, country, city, address_1, name, id, mtime**의 필드 값을 추출하고, 이를 Tuple의 형태로 출력하는 Bolt
+* **KafkaBolt**: ***ExtractVenueFieldsBolt***의 출력 tuple들을 CEP에서 Serializer를 이용하여, 또 다른 Kafka topic에 write하는 Bolt
 
-> ```gradle cleanTest test```
+로 구성되어 있는 것을 알 수 있다.
 
-원격에서 실행중인 Storm에 토폴로지를 deploy하기 위해서는, 
+### Test in Gradle
+이 SimpleMeetUpParseTopology를 로컬에서 (즉, 172.17.8.101 등 VM을 포함한 원격 시스템이 아닌) 테스트하기 위한 프로그램의 소스가 SimpleMeetUpParseTopologyTest.java 이다. 로컬에서 Storm을 실행한다고 하더라도 Zookeeper와 Kafka는 원격 시스템에서 실행되고 있다고 가정한다. 이를테면, 이 테스트 프로그램 소스를 열어보면 아래와 같은 설정을 볼 수 있다.
 
-> ```gradle shadowJar```
+    private static String zkHosts = "172.17.8.101:2181"; // For sourcing
+    private static String kafkaHosts = "172.17.8.101:9092"; //For sinking
+    private static String topic_src = "meetup_venue_lines";
+    private static String topic_tgt = "meetup_venue_events";
 
-> ```storm jar ./build/libs/storm-topology-0.8-SNAPSHOT-all.jar com.obzen.stream.storm.ExampleTopologyProvider```
+만일, 다른 설정이 필요하다면, 위 사항을 편집한다.
+아래의 명령으로 로컬 스톰을 시작하여 테스트할 수 있다.
 
-원격 Storm클러스터에 deploy된 토폴로지들의 확인
+> gradle test --tests *.SimpleMeetUpParseTopologyTest
 
-> ```storm list``` 
+### Run in a remote Storm
 
-특정 토폴로지를 중단
-> ```storm kill <topology name>```
+원격(172.17.8.101)에서 실행중인 Storm에서 위 topology를 실행하기 위해서는 **strom** 커맨드를 이용하여야 한다. 즉, storm이 로컬 머신에 설치되어 있어야 하고, [storm_home_directory]/conf/storm.yaml의 내용이 아래와 같으면 된다.
+
+    storm.zookeeper.servers:
+        - "172.17.8.101"
+    nimbus.host: "172.17.8.101"
+    drpc.servers:
+        - "172.17.8.101"
+
+위 사항을 확인하였으면 아래의 명령을 차례로 수행한다.
+storm-topology 디렉토리 안에서;
+> gradle shadowJar
+
+> storm jar ./build/libs/storm-topology-0.8-SNAPSHOT-all.jar com.obzen.stream.storm.SimpleMeetUpParseTopology -z 172.17.8.101:2181 -k 172.17.8.101:9092 -s meetup_venue_lines -t meetup_venue_events
+
+위에서 두번째 커맨드는 원격 Storm (conf/storm.yaml 에 셋팅된)으로 topology(Jar 파일)을 전송하되, 실행될 토폴로지에 필요한 파라미터들을 함께 전달하기 위한 것이다. 파라미터들에 대해서는 **SimpleMeetUpParseTopology.java**의 내용을 확인해보면 알 수 있다.
+
+Storm클러스터에 deploy된 토폴로지들의 확인;
+
+> storm list
+
+토폴로지를 중단;
+> storm kill meetup-venue-topology
 
 ## cep-query
 Storm 의 처리결과를 읽어들여, Siddhi CEP 쿼리를 수행

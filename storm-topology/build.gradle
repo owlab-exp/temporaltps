@@ -17,7 +17,7 @@ sourceSets {
 
 version '0.8-SNAPSHOT'
 
-mainClassName = 'com.obzen.stream.storm.ExampleTopologyProvider'
+mainClassName = 'com.obzen.stream.storm.SimpleMeetUpParseTopology'
 
 jar {
     manifest {
@@ -38,10 +38,23 @@ dependencies {
         exclude module: 'log4j'
     }
     compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
+    compile "net.sf.jopt-simple:jopt-simple:4.9"
 
     // From maven local repository!
     compile('com.obzen:cep-event-serializer:3.0.0-SNAPSHOT') {
         exclude module: 'slf4j-api'
         exclude module: 'slf4j-log4j12'
+    }
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+}
+
+test {
+    testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
     }
 }
