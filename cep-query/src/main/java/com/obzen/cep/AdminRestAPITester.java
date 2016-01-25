@@ -32,10 +32,10 @@ public class AdminRestAPITester {
     public static void main(String... args) throws Exception {
         //Parse arguments
         OptionParser parser = new OptionParser();
-        OptionSpec<String> restHost = parser.accepts("e").withRequiredArg().ofType(String.class).describedAs("RESTful endPoint host-port, ex: 192.168.10.83:8082");
-        OptionSpec<String> node = parser.accepts("n").withRequiredArg().ofType(String.class).describedAs("Node ID, ex: node.192.168.10.83.5800");
-        OptionSpec<String> compJson = parser.accepts("j").withRequiredArg().ofType(String.class).describedAs("a component json file path, ex: resources/example_component.json");
-        OptionSpec<String> cmd = parser.accepts("c").withRequiredArg().ofType(String.class).describedAs("start or stop");
+        OptionSpec<String> restHost = parser.accepts("e", "ex: 192.168.10.83:8082").withRequiredArg().ofType(String.class).describedAs("RESTful Endpoint");
+        OptionSpec<String> node = parser.accepts("n", "ex: node.192.168.10.83.5800").withRequiredArg().ofType(String.class).describedAs("Node ID");
+        OptionSpec<String> compJson = parser.accepts("j", "ex: resources/example_component.json").withRequiredArg().ofType(String.class).describedAs("a component json file path");
+        OptionSpec<String> cmd = parser.accepts("c", "start or stop").withRequiredArg().ofType(String.class).describedAs("command");
 
         OptionSet options = parser.parse(args);
         

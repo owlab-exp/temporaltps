@@ -20,16 +20,13 @@
                     "streamId" : "countryAndCityStream"
                 } ],
                 "executionPlan" : [ 
-                                    "@Plan:name('SimpleVenueCQ01')", 
+                                    "@Plan:name('SimpleVenueCQ02')", 
                                     "define stream venueStream (zip string, country string, city string, address_1 string, name string, id long, mtime long);", 
-                                    "partition with (country of venueStream)", 
-                                    "begin", 
                                     "   @info(name = 'query') ", 
-                                    "   from venueStream#window.time(1 min)", 
+                                    "   from venueStream[not(zip is null)]#window.time(1 min)", 
                                     "   select country, city, count(city) as cityCount", 
                                     "   group by country, city", 
-                                    "   insert into countryAndCityStream ;", 
-                                    "end;" 
+                                    "   insert into countryAndCityStream ;"
                 ],
                 "useJunction" : false,
                 "snapshotIntervalMinutes" : 1,
