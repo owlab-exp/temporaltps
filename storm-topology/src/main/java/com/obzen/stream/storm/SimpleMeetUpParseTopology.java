@@ -96,13 +96,15 @@ public class SimpleMeetUpParseTopology implements Serializable {
         OptionParser parser = new OptionParser();
         OptionSpec<String> zkHostsOp = parser.accepts("z").withRequiredArg().ofType(String.class).describedAs("zkHosts");
         OptionSpec<String> kafkaHostsOp = parser.accepts("k").withRequiredArg().ofType(String.class).describedAs("kafkaHosts");
-        OptionSpec<String> topicSrcOp = parser.accepts("s").withRequiredArg().ofType(String.class).describedAs("Source Topic");
-        OptionSpec<String> topicTgtOp = parser.accepts("t").withRequiredArg().ofType(String.class).describedAs("Target Topic");
+        OptionSpec<String> topologyNameOp = parser.accepts("n").withRequiredArg().ofType(String.class).describedAs("Topology name");
+        OptionSpec<String> topicSrcOp = parser.accepts("s").withRequiredArg().ofType(String.class).describedAs("Source topic");
+        OptionSpec<String> topicTgtOp = parser.accepts("t").withRequiredArg().ofType(String.class).describedAs("Target topic");
 
         OptionSet options = parser.parse(args);
 
         if(!(options.has(zkHostsOp) && options.hasArgument(zkHostsOp) &&
              options.has(kafkaHostsOp) && options.hasArgument(kafkaHostsOp) &&
+             options.has(topologyNameOp) && options.hasArgument(topologyNameOp) &&
              options.has(topicSrcOp) && options.hasArgument(topicSrcOp) &&
              options.has(topicTgtOp) && options.hasArgument(topicTgtOp)
              )) {
@@ -112,6 +114,7 @@ public class SimpleMeetUpParseTopology implements Serializable {
 
         String zkHosts = options.valueOf(zkHostsOp);
         String kafkaHosts = options.valueOf(kafkaHostsOp);
+        String topologyName = options.valueOf(topologyNameOp);
         String topic_src = options.valueOf(topicSrcOp);
         String topic_tgt = options.valueOf(topicTgtOp);
 
@@ -133,6 +136,6 @@ public class SimpleMeetUpParseTopology implements Serializable {
         conf.setNumWorkers(1);
         //conf.setDebug(true);
         // Submit to remote Storm cluster
-        StormSubmitter.submitTopology("meetup-venue-topology", conf, topologyToDeploy);
+        StormSubmitter.submitTopology(topologyName, conf, topologyToDeploy);
     }
 }
