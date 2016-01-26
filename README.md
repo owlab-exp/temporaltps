@@ -205,14 +205,16 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
 
 * **definitionMeta** : 서버에 탑재되었을 때에 식별가능한 ID를 정의하고 있다. ID = name + version
 * **service** : Event Processor의 서비스 이름은 언제나 **ocep.EventProcessor**
-* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다.<br> 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다.<br> 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 (암묵적으로)정의되고 있으며,<br> ```select country, city, count(city) as cityCount```로부터 output stream의 데이터 구조가 [String, String, Long]인 것 또한 SiddhiQL의 데이터 유형 자동변환 규칙에 따라, 유추할 수 있다.
+* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다.<br> 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다.<br> 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 (암묵적으로)정의되고 있으며,<br> ```select country, city, count(city) as cityCount```로부터 output stream의 데이터 구조가 [String, String, Long]인 것 또한 (SiddhiQL의 데이터 타입 컨버전 규칙에 따라) 유추할 수 있다.
 * **startupOptions/config/inputPorts** : ```KafkaAdatperProvider```를 이용하여 ```meetup_venue_events``` (portName == topic name)를 읽어들여, executionPlan의 input stream인 ```venueStream```으로 전달한다.
 * **startupOptions/config/outputPorts** : ```KafkaAdapterProvider```를 이용하여 executionPlan의 output stream인 ```countryAndCityStream```의 데이터를 ```meetup_venue_out```(portName == topic name)으로 전달한다.
 
 ### Run in a remote obzenCEP
-위 Json 파일의 내용은 obzenCEP에서 제공하는 RESTful API를 이용하여 obzenCEP로 전송되어야 한다. 이를 위한 테스트 프로그램이 **cep-query/src/main/java/com/obzen/cep/AdminRestAPITester.java** 이다.
+위 Json 파일의 내용은 obzenCEP에서 제공하는 RESTful API를 이용하여 obzenCEP로 전송되어야 한다.<br> 
+이 때 end point는 **http://172.17.8.101:8082/rest/nodes/node.172.17.8.101.5800/services** 이고, HTTTP method는 PUT을 이용한다.<br>
+이를 위한 간단한 프로그램이 **cep-query/src/main/java/com/obzen/cep/AdminRestAPITester.java** 이다.
 
-이를 Gradle에서 수행하기 위해서는 다음의 명령을 사용한다.
+이 프로그램을 Gradle에서 수행하기 위해서는 다음의 명령을 사용한다.
 cep-query 디렉토리 안에서;
 
 > gradle run -Pargs="-c **start** -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json"
@@ -220,10 +222,7 @@ cep-query 디렉토리 안에서;
 위의 명령으로 실행시킨 쿼리를 중단하기 위해서는 위 구문의 start를 stop으로 바꾸어 실행하면 된다.
 > gradle run -Pargs="-c **stop** -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json"
 
-주의 사항, 
-
-* 위 AdminRestAPITester는 obzenCEP의 RESTful API중 위의 두 가지 경우만을 테스트할 수 있다. 나머지 API들에 대해서는 obzenCEP 프로젝트를 참조하여야 한다.
-* 마지막의 stop 명령은, Kafka Topic에서 읽어들여야할 데이터가 많은 경우 time out 에러가 발행할 수 있다. [Bug!]
+참고로 AdminRestAPITester는 obzenCEP의 RESTful API들 중 위의 두 가지 경우만을 테스트할 수 있다. 나머지 API들에 대해서는 obzenCEP 프로젝트를 참조한다.
 
 ## end-kafka-reader
 CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader
