@@ -72,7 +72,9 @@ Gradle에서 메인 프로그램을 실행하기 위해서는 이 위의 환경�
 event-feeder 디렉토리에서;
 
 > gradle distTar
+
 > cd docker-build
+
 > ./repub.sh
 
 - ```gradle distTar```는 docker image를 만들 때 사용할 프로그램 및 연관 라이브러리의 tar archive를 생성하기 위한 것이며, 
@@ -92,15 +94,19 @@ Docker registry에 있는 이미지를 CoreOS에서 실행하기 위해서는 **
 (필요하다면, 이 파일을 편집하여 셋팅을 바꾸고) 아래와 같은 fleetctl 명령으로 CoreOS에서 실행한다. 
 docker-build 디렉토리 안에서;
 
-> fleetctl submit meetup-venues<br>
-> fleetctl load meetup-venues<br>
-> fleetctl start meetup-venues<br>
+> fleetctl submit meetup-venues
 
-그리고 ```fleetctl journal -f meetup-venues``` 명령으로 실행상태를 확인해볼 수 있다.
+> fleetctl load meetup-venues
+
+> fleetctl start meetup-venues
+
+그리고 ```fleetctl journal -f meetup-venues``` 명령으로 실행상태를 확인해볼 수 있다.<br>
 이 서비스를 중단하기 위해서는 아래의 fleetctl 명령을 이용한다.
+
 > fleetctl stop meetup-venues
 
 ## storm-topology
+----------------------------
 ### Sample Topology
 이 서브 프로젝트의 주요 프로그램 소스는 **SimpleMeetUpParseTopology.java** 이다.
 이 소스를 열어보면,
