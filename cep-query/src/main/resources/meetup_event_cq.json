@@ -29,7 +29,7 @@
                                     "   insert into countryAndCityStream ;"
                 ],
                 "useJunction" : false,
-                "snapshotIntervalMinutes" : 1,
+                "snapshotIntervalMinutes" : 5,
                 "snapshotExpireMinutes" : 1440,
                 "distributedExecution" : false,
                 "enableStatistics" : false

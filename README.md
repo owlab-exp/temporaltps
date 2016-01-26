@@ -17,7 +17,9 @@
 이하 각 서프 프로젝트들에 대한 설명은 Linux에서 테스트할 때를 기준으로 하고 있으며,
 
 * Vagrant를 이용하여 CoreOS VM이 실행되고 있고, 그 IP는 172.17.8.101이다.
-* 이 CoreOS VM에 Zookeeper, Kafka, Storm, Cassandra, 그리고 obzenCEP가 docker container들로서 운영되고 있다.
+* CoreOS VM에 Zookeeper, Kafka, Storm, Cassandra, 그리고 obzenCEP가 docker container들로서 실행되고 있다.
+* 로컬 시스템에 storm이 설치되어 있다.
+* 호스트 obzen-reg 에 대한 IP Address가 /etc/hosts에 명시되어 있고, 그 호스트에서 docker registry가 운영되고 있어야 한다.
 
 이 CoreOS VM 외부에서 fleetctl로 서비스들을 컨트롤하기 위해서는 다음의 명령이 미리 실행되어야 한다.
 
@@ -25,7 +27,6 @@
 
 > ssh-add ~/.vagrant.d/insecure_private_key
 
-또한, 호스트 obzen-reg 에 대한 IP Address가 /etc/hosts에 명시되어 있고, 그 호스트에서 docker registry가 운영되고 있어야 한다.
 
 ## event-feeder
 -----------------------------------------------
@@ -145,16 +146,19 @@ storm-topology 디렉토리 안에서;
 
 > storm jar ./build/libs/storm-topology-0.8-SNAPSHOT-all.jar com.obzen.stream.storm.SimpleMeetUpParseTopology -z 172.17.8.101:2181 -k 172.17.8.101:9092 -s meetup_venue_lines -t meetup_venue_events
 
-위에서 두번째 커맨드는 원격 Storm (conf/storm.yaml 에 셋팅된)으로 topology(Jar 파일)을 전송하되, 실행될 토폴로지에 필요한 파라미터들을 함께 전달하기 위한 것이다. 파라미터들에 대해서는 **SimpleMeetUpParseTopology.java**의 내용을 확인해보면 알 수 있다.
+위에서 두번째 커맨드는 원격 Storm (conf/storm.yaml 에 셋팅된)으로 topology(Jar 파일)을 전송하되, 실행될 토폴로지에 필요한 파라미터들을 함께 전달하기 위한 것이다. 
+파라미터들에 대해서는 **SimpleMeetUpParseTopology.java**의 소스를 확인해보면 알 수 있다.
 
 Storm클러스터에 deploy된 토폴로지들의 확인;
 
 > storm list
 
-토폴로지를 중단;
+토폴로지를 중단하고 싶으면, 실행 중인 토폴로지의 이름을 이용한다;
+
 > storm kill meetup-venue-topology
 
 ## cep-query
+-----------------------------------
 ### Sample Continuous Query
 **cep-query/src/main/resources/meetup_event_cq.json** 파일을 열어 obzenCEP에서 실행될 continuous query를 살펴보도록 하자.
 
@@ -182,17 +186,14 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
                 "executionPlan" : [
                                     "@Plan:name('SimpleVenueCQ01')",
                                     "define stream venueStream (zip string, country string, city string, address_1 string, name string, id long, mtime long);",
-                                    "partition with (country of venueStream)",
-                                    "begin",
                                     "   @info(name = 'query') ",
-                                    "   from venueStream#window.time(1 min)",
+                                    "   from venueStream[not(zip is null)]#window.time(1 min)",
                                     "   select country, city, count(city) as cityCount",
                                     "   group by country, city",
-                                    "   insert into countryAndCityStream ;",
-                                    "end;"
+                                    "   insert into countryAndCityStream ;"
                 ],
                 "useJunction" : false,
-                "snapshotIntervalMinutes" : 1,
+                "snapshotIntervalMinutes" : 5,
                 "snapshotExpireMinutes" : 1440,
                 "distributedExecution" : false,
                 "enableStatistics" : false
@@ -204,7 +205,7 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
 
 * **definitionMeta** : 서버에 탑재되었을 때에 식별가능한 ID를 정의하고 있다. ID = name + version
 * **service** : Event Processor의 서비스 이름은 언제나 **ocep.EventProcessor**
-* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다. 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다. 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 정의되어 있음을 알 수 있고, ```select country, city, count(city) as cityCount```로부터 출력 데이터가 [String, String, Long]인 것 또한 유추할 수 있다.
+* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다.<br> 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다.<br> 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 정의되어 있음을 알 수 있고, ```select country, city, count(city) as cityCount```로부터 출력 데이터가 [String, String, Long]인 것 또한 유추할 수 있다.
 * **startupOptions/config/inputPorts** : ```KafkaAdatperProvider```를 이용하여 ```meetup_venue_events``` (portName == topic name)를 읽어들여, executionPlan의 input stream인 ```venueStream```으로 전달한다.
 * **startupOptions/config/outputPorts** : ```KafkaAdapterProvider```를 이용하여 executionPlan의 output stream인 ```countryAndCityStream```의 데이터를 ```meetup_venue_out```(portName == topic name)으로 전달한다.
 
