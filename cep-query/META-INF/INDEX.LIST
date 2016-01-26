@@ -1,0 +1,21 @@
+JarIndex-Version: 1.0
+
+vertx-auth-common-3.1.0.jar
+META-INF
+META-INF/maven
+META-INF/maven/io.vertx
+META-INF/maven/io.vertx/vertx-auth-common
+io
+io/vertx
+io/vertx/ext
+io/vertx/ext/auth
+io/vertx/groovy
+io/vertx/groovy/ext
+io/vertx/groovy/ext/auth
+io/vertx/groovy/ext/auth/common
+io/vertx/rxjava
+io/vertx/rxjava/ext
+io/vertx/rxjava/ext/auth
+vertx-auth-common-js
+vertx-auth-common
+

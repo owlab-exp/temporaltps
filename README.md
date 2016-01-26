@@ -223,12 +223,6 @@ cep-query 디렉토리 안에서;
 
 > gradle run -Pargs="-c **stop** -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json"
 
-또는, 아래와 같이 jar를 만들어 실행할 수도 있을 것이다.
-
-> gradle jar
-
-> java -jar ./build/libs/cep-query.jar com.obzen.cep.AdminRestAPITester -c start -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json
-
 참고로 AdminRestAPITester는 obzenCEP의 RESTful API들 중 위의 두 가지 경우만을 테스트할 수 있다. 나머지 API들에 대해서는 obzenCEP 프로젝트를 참조한다.
 
 ## console-reader
