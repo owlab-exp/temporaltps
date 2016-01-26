@@ -118,7 +118,7 @@ docker-build 디렉토리 안에서;
 로 구성되어 있는 것을 알 수 있다.
 
 ### Test in Gradle
-이 SimpleMeetUpParseTopology를 로컬에서 (즉, 172.17.8.101 등 VM을 포함한 원격 시스템이 아닌) 테스트하기 위한 프로그램의 소스가 SimpleMeetUpParseTopologyTest.java 이다. 로컬에서 Storm을 실행한다고 하더라도 Zookeeper와 Kafka는 원격 시스템에서 실행되고 있다고 가정한다. 이를테면, 이 테스트 프로그램 소스를 열어보면 아래와 같은 설정을 볼 수 있다.
+이 SimpleMeetUpParseTopology를 로컬에서 (즉, 172.17.8.101 등 VM을 포함한 원격 시스템이 아닌) 테스트하기 위한 프로그램의 소스가 SimpleMeetUpParseTopologyTest.java 이다. 로컬에서 Storm을 실행한다고 하더라도 Zookeeper와 Kafka는 원격 시스템의 것을 사용한다. 이 테스트 프로그램 소스를 열어보면 아래와 같이 CoreOS VM에서 실행 중인 Zookeeper와 Kafka를 바라보고 있는 것을 알 수 있다.
 
     private static String zkHosts = "172.17.8.101:2181"; // For sourcing
     private static String kafkaHosts = "172.17.8.101:9092"; //For sinking
@@ -126,12 +126,11 @@ docker-build 디렉토리 안에서;
     private static String topic_tgt = "meetup_venue_events";
 
 만일, 다른 설정이 필요하다면, 위 사항을 편집한다.
-아래의 명령으로 로컬 스톰을 시작하여 테스트할 수 있다.
+아래의 명령으로 Local Storm cluster에서 테스트할 수 있다.
 
 > gradle test --tests *.SimpleMeetUpParseTopologyTest
 
 ### Run in a remote Storm
-
 원격(172.17.8.101)에서 실행중인 Storm에서 위 topology를 실행하기 위해서는 **strom** 커맨드를 이용하여야 한다. 즉, storm이 로컬 머신에 설치되어 있어야 하고, [storm_home_directory]/conf/storm.yaml의 내용이 아래와 같으면 된다.
 
     storm.zookeeper.servers:
