@@ -73,6 +73,7 @@ public class EndKafkaReader {
             nextOffset = topicReader.fetchFully(readOffset);
             if(nextOffset == readOffset) {
                 try {
+                    System.out.println("waiting for data available");
                     Thread.sleep(1000);
                 } catch(Exception e) {
                     //
