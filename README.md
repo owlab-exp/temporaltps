@@ -190,7 +190,8 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
                                     "   from venueStream[not(zip is null)]#window.time(1 min)",
                                     "   select country, city, count(city) as cityCount",
                                     "   group by country, city",
-                                    "   insert into countryAndCityStream ;"
+                                    "   having cityCount > 10",
+                                    "   insert current events into countryAndCityStream ;"
                 ],
                 "useJunction" : false,
                 "snapshotIntervalMinutes" : 5,
@@ -227,5 +228,9 @@ cep-query 디렉토리 안에서;
 
 ## console-reader
 ------------------------------------
-CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader이다.
+CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader이다.<br>
+위에서와 마찬가지로 build.gradle 의 mainClassName에 해당하는 프로그램의 소스를 살펴보면, 어떻게 Kafka Topic으로부터, CEP Query의 output stream을 읽어들일 수 있는지 알 수 있다.
 
+### Run in Gradle
+
+> gradle run -Pargs="-z 172.17.8.101:2181 -k 172.17.8.101:9092 -t meetup_venue_out -g test-group"
