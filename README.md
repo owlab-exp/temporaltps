@@ -92,9 +92,9 @@ Docker registry에 있는 이미지를 CoreOS에서 실행하기 위해서는 **
 (필요하다면, 이 파일을 편집하여 셋팅을 바꾸고) 아래와 같은 fleetctl 명령으로 CoreOS에서 실행한다. 
 docker-build 디렉토리 안에서;
 
-> fleetctl submit meetup-venues
-> fleetctl load meetup-venues
-> fleetctl start meetup-venues
+> fleetctl submit meetup-venues<br>
+> fleetctl load meetup-venues<br>
+> fleetctl start meetup-venues<br>
 
 그리고 ```fleetctl journal -f meetup-venues``` 명령으로 실행상태를 확인해볼 수 있다.
 이 서비스를 중단하기 위해서는 아래의 fleetctl 명령을 이용한다.
