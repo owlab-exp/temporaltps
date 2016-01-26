@@ -211,7 +211,7 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
 
 ### Run in a remote obzenCEP
 위 Json 파일의 내용은 obzenCEP에서 제공하는 RESTful API를 이용하여 obzenCEP로 전송되어야 한다.<br> 
-이 때 end point는 **http://172.17.8.101:8082/rest/nodes/node.172.17.8.101.5800/services** 이고, HTTTP method는 PUT을 이용한다.<br>
+이 때 URL end point는 **http://172.17.8.101:8082/rest/nodes/node.172.17.8.101.5800/services** 이고, HTTTP method는 PUT을 이용한다.<br>
 이를 위한 간단한 프로그램이 **cep-query/src/main/java/com/obzen/cep/AdminRestAPITester.java** 이다.
 
 이 프로그램을 Gradle에서 수행하기 위해서는 다음의 명령을 사용한다.
@@ -220,9 +220,18 @@ cep-query 디렉토리 안에서;
 > gradle run -Pargs="-c **start** -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json"
 
 위의 명령으로 실행시킨 쿼리를 중단하기 위해서는 위 구문의 start를 stop으로 바꾸어 실행하면 된다.
+
 > gradle run -Pargs="-c **stop** -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json"
+
+또는, 아래와 같이 jar를 만들어 실행할 수도 있을 것이다.
+
+> gradle jar
+
+> java -jar ./build/libs/cep-query.jar com.obzen.cep.AdminRestAPITester -c start -e 172.17.8.101:8082 -n node.172.17.8.101.5800 -j ./src/main/resources/meetup_event_cq.json
 
 참고로 AdminRestAPITester는 obzenCEP의 RESTful API들 중 위의 두 가지 경우만을 테스트할 수 있다. 나머지 API들에 대해서는 obzenCEP 프로젝트를 참조한다.
 
-## end-kafka-reader
-CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader
+## console-reader
+------------------------------------
+CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader이다.
+
