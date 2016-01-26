@@ -205,7 +205,7 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
 
 * **definitionMeta** : 서버에 탑재되었을 때에 식별가능한 ID를 정의하고 있다. ID = name + version
 * **service** : Event Processor의 서비스 이름은 언제나 **ocep.EventProcessor**
-* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다.<br> 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다.<br> 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 정의되어 있음을 알 수 있고, ```select country, city, count(city) as cityCount```로부터 출력 데이터가 [String, String, Long]인 것 또한 유추할 수 있다.
+* **startupOptions/config/executionPlan** : 가장 중요한 부분으로 Siddhi Library를 이용하여 수행될 Continuous Query를 정의한다.<br> 이 Query의 ```define stream ... ```절로부터, input stream으로 ```venueStream```이 데이터 구조와 함께 정의되어 있는 것을 확인할 수 있다.<br> 또한  ```insert into countryAndCityStream```절로부터 output stream인 ```countryAndCityStream```이 (암묵적으로)정의되고 있으며,<br> ```select country, city, count(city) as cityCount```로부터 output stream의 데이터 구조가 [String, String, Long]인 것 또한 SiddhiQL의 데이터 유형 자동변환 규칙에 따라, 유추할 수 있다.
 * **startupOptions/config/inputPorts** : ```KafkaAdatperProvider```를 이용하여 ```meetup_venue_events``` (portName == topic name)를 읽어들여, executionPlan의 input stream인 ```venueStream```으로 전달한다.
 * **startupOptions/config/outputPorts** : ```KafkaAdapterProvider```를 이용하여 executionPlan의 output stream인 ```countryAndCityStream```의 데이터를 ```meetup_venue_out```(portName == topic name)으로 전달한다.
 
