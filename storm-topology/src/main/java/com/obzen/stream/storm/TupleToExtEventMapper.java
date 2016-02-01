@@ -7,6 +7,9 @@ import com.obzen.common.serializer.impl.ExternalEventSerializer;
 import backtype.storm.tuple.Tuple;
 import storm.kafka.bolt.mapper.TupleToKafkaMapper;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +31,16 @@ public class TupleToExtEventMapper implements TupleToKafkaMapper<String, byte[]>
     @Override
     public byte[] getMessageFromTuple(Tuple tuple) {
 
-        ExtEvent[] extEvents = new ExtEvent[]{new ExtEvent(System.currentTimeMillis(), tuple.getValues().toArray())};
+        if(!tuple.contains("timestamp")) {
+            return null;
+        }
+
+        Long timestamp = tuple.getLongByField("timestamp");
+        List<Object> values = tuple.getValues();
+        //Remove the timestamp to handle differently
+        values.remove(timestamp);
+
+        ExtEvent[] extEvents = new ExtEvent[]{new ExtEvent(timestamp, values.toArray())};
 
         byte[] result = null;
 

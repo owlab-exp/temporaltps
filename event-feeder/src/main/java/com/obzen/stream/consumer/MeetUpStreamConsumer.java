@@ -80,7 +80,12 @@ public class MeetUpStreamConsumer {
                 }
             }
         })
-        .doOnNext(line -> System.out.println(line))
+        .doOnNext(line -> System.out.println("RAW: " + line))
+        //Skip blank or blank json
+        .filter(line -> !(line.equalsIgnoreCase("{}") || line.trim().equals("")))
+        //Add timestamp
+        .map(line -> line.replace("{", "{\"timestamp\":" + System.currentTimeMillis() + ","))
+        //.doOnNext(line -> System.out.println("Timestamped: " + line))
         .map(line -> new ProducerRecord<Void, byte[]>(topic, line.getBytes()))
         .flatMap(record -> Observable.from(producer.send(record)))
         .subscribe(new Subscriber<RecordMetadata>() {

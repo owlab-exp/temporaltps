@@ -11,10 +11,10 @@ ExecStart=/usr/bin/bash -c \
             "KAFKA_URLS=$(fleetctl list-machines -no-legend=true -fields=ip | awk '{print $1\":9092\"}' | tr '\n' ',' | sed s'/,$//') \
             && exec /usr/bin/docker run --rm --name %p \
             -m 128m \
-            -e MEETUP_ENDPOINT="http://stream.meetup.com/2/open_venues?trickle" \
+            -e MEETUP_ENDPOINT="http://stream.meetup.com/2/rsvps" \
             -e KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URLS \
-            -e KAFKA_TOPIC=meetup_venue_lines \
-            -e KAFKA_CLIENT_ID=meetup_client \
+            -e KAFKA_TOPIC=meetup_rsvp_lines \
+            -e KAFKA_CLIENT_ID=meetup_rsvp_client \
             obzen-reg:5000/obzen/event-feed:0.8"
 ExecStop=/usr/bin/docker stop %p
 Restart=on-failure
@@ -23,4 +23,4 @@ SuccessExitStatus=143
 TimeoutSec=900s
 
 [X-Fleet]
-MachineMetadata=machine-id=1
+MachineMetadata=machine-id=2

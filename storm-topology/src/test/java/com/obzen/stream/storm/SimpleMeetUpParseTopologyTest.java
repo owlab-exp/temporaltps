@@ -25,7 +25,6 @@ import storm.kafka.KafkaConfig;
 import storm.kafka.SpoutConfig;
 import storm.kafka.StringScheme;
 import storm.kafka.ZkHosts;
-import storm.kafka.ZkHosts;
 import storm.kafka.bolt.KafkaBolt;
 import storm.kafka.bolt.mapper.FieldNameBasedTupleToKafkaMapper;
 import storm.kafka.bolt.mapper.TupleToKafkaMapper;
@@ -65,7 +64,7 @@ public class SimpleMeetUpParseTopologyTest implements Serializable {
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("meetup-venue-topology", conf, topology);
-        Utils.sleep(20000);
+        Utils.sleep(5000);
         cluster.killTopology("meetup-venue-topology");
         cluster.shutdown();
     }
