@@ -6,13 +6,35 @@ import com.obzen.common.event.ExtEvent;
 import com.obzen.common.kafka.KafkaTopicDisruptReader;
 import com.obzen.common.kafka.KafkaTopicReader;
 
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
 public class EndKafkaReader {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        // Parse arguments
+        OptionParser parser = new OptionParser();
+        OptionSpec<String> zkUrlsOpt = parser.accepts("z", "ZooKeeper URLs, ex: 172.17.8.101:2181").withRequiredArg().ofType(String.class).describedAs("zookeeper urls");
+        OptionSpec<String> kafkaUrlsOpt = parser.accepts("k", "Kafka URLs, ex: 172.17.8.101:9092").withRequiredArg().ofType(String.class).describedAs("kafka urls");
+        OptionSpec<String> topicOpt = parser.accepts("t", "Topic to read, ex: my-topic").withRequiredArg().ofType(String.class).describedAs("topic");
+        OptionSpec<String> groupIdOpt = parser.accepts("g", "Group Id, ex: my-group").withRequiredArg().ofType(String.class).describedAs("group ID");
+
+        OptionSet options = parser.parse(args);
+
+        if(!(options.has(zkUrlsOpt) && options.hasArgument(zkUrlsOpt) &&
+                    options.has(kafkaUrlsOpt) && options.hasArgument(kafkaUrlsOpt) &&
+                    options.has(topicOpt) && options.hasArgument(topicOpt) &&
+                    options.has(groupIdOpt) && options.hasArgument(groupIdOpt))) {
+            parser.printHelpOn(System.out);
+            System.exit(0);
+                    }
+
         // Prepare event serializers in ordered way
         ExternalEventSerializer serializer = ExternalEventSerializer.builder()
                 .addDataFieldType(FieldType.STRING)
@@ -21,11 +43,17 @@ public class EndKafkaReader {
                 .build();
         
         // Consume events
-        String topic = "country_city";
+        //String topic = "country_city";
+        //Properties props = new Properties();
+        //props.setProperty("zk.urls", "192.168.10.82:2181");
+        //props.setProperty("kafka.urls", "192.168.10.82:9092");
+        //props.setProperty("kafka.group.id", "test-consumer-01");
+        String topic = options.valueOf(topicOpt);
         Properties props = new Properties();
-        props.setProperty("zk.urls", "192.168.10.82:2181");
-        props.setProperty("kafka.urls", "192.168.10.82:9092");
-        props.setProperty("kafka.group.id", "test-consumer-01");
+        props.setProperty("zk.urls", options.valueOf(zkUrlsOpt));
+        props.setProperty("kafka.urls", options.valueOf(kafkaUrlsOpt));
+        props.setProperty("kafka.group.id", options.valueOf(groupIdOpt));
+
         KafkaTopicReader topicReader = new KafkaTopicDisruptReader(topic, props) {
             @Override
             public void processEventsBytes(long currentOffset, byte[] bytes) {
@@ -43,6 +71,14 @@ public class EndKafkaReader {
         long nextOffset = -1L;
         while (true) {
             nextOffset = topicReader.fetchFully(readOffset);
+            if(nextOffset == readOffset) {
+                try {
+                    System.out.println("waiting for data available");
+                    Thread.sleep(1000);
+                } catch(Exception e) {
+                    //
+                }
+            }
             readOffset = nextOffset;
         }
     }
