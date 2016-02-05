@@ -33,6 +33,7 @@
 |----------|---------|--------|
 | Java | Oracle JDK 8 | |
 | Gradel | > 2.5 | |
+| Docker | > 1.9.1| (Linux에 별도로 설치할 경우) |
 | Fleetctl | > 0.11.5 | (Linux에 별도로 설치할 경우) |
 
 ## event-feeder
