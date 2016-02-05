@@ -76,11 +76,16 @@ public class SimpleMeetUpParseTopology implements Serializable {
         ExternalEventSerializer serializer = ExternalEventSerializer.builder()
                                     .addDataFieldType(FieldType.STRING) //zip
                                     .addDataFieldType(FieldType.STRING) //country
-                                    .addDataFieldType(FieldType.STRING) //...
-                                    .addDataFieldType(FieldType.STRING)
-                                    .addDataFieldType(FieldType.STRING)
+                                    .addDataFieldType(FieldType.STRING) //state
+                                    .addDataFieldType(FieldType.STRING) // city
+                                    .addDataFieldType(FieldType.STRING) //address_1
+                                    .addDataFieldType(FieldType.STRING) //address_2
+                                    .addDataFieldType(FieldType.STRING) //address_3
+                                    .addDataFieldType(FieldType.DOUBLE) //lat
+                                    .addDataFieldType(FieldType.DOUBLE) //lon
                                     .addDataFieldType(FieldType.LONG) //id
-                                    .addDataFieldType(FieldType.LONG) //mtime
+                                    .addDataFieldType(FieldType.STRING) //name
+                                    .addDataFieldType(FieldType.STRING) //phone
                                     .build();
         KafkaBolt<String, byte[]> sinkBolt = new KafkaBolt<String, byte[]>()
             //.withProducerProperties(props) // not valid in version Storm 0.10.0
@@ -133,7 +138,7 @@ public class SimpleMeetUpParseTopology implements Serializable {
 
         conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props); // version 0.10.0
 
-        conf.setNumWorkers(1);
+        conf.setNumWorkers(2);
         //conf.setDebug(true);
         // Submit to remote Storm cluster
         StormSubmitter.submitTopology(topologyName, conf, topologyToDeploy);

@@ -27,14 +27,33 @@ mainClassName = 'com.obzen.stream.consumer.MeetUpStreamConsumer'
 //                             "-DKAFKA_TOPIC=meetup_venue_lines", 
 //                             "-DKAFKA_CLIENT_ID=meetup_client"]
 run {
+// VENUES
     environment "MEETUP_ENDPOINT", "http://stream.meetup.com/2/open_venues?trickle" 
     environment "KAFKA_BOOTSTRAP_SERVERS", "172.17.8.101:9092" 
     environment "KAFKA_TOPIC", "meetup_venue_lines"
-    environment "KAFKA_CLIENT_ID", "meetup_client"
+    environment "KAFKA_CLIENT_ID", "meetup_venue_client"
+
+// COMMENTS
+//    environment "MEETUP_ENDPOINT", "http://stream.meetup.com/2/event_comments" 
+//    environment "KAFKA_BOOTSTRAP_SERVERS", "172.17.8.101:9092" 
+//    environment "KAFKA_TOPIC", "meetup_comments_lines"
+//    environment "KAFKA_CLIENT_ID", "meetup_comment_client"
+
+// EVENTS
+//    environment "MEETUP_ENDPOINT", "http://stream.meetup.com/2/open_events" 
+//    environment "KAFKA_BOOTSTRAP_SERVERS", "172.17.8.101:9092" 
+//    environment "KAFKA_TOPIC", "meetup_events_lines"
+//    environment "KAFKA_CLIENT_ID", "meetup_event_client"
+
+// RSVP
+//    environment "MEETUP_ENDPOINT", "http://stream.meetup.com/2/rsvps" 
+//    environment "KAFKA_BOOTSTRAP_SERVERS", "172.17.8.101:9092" 
+//    environment "KAFKA_TOPIC", "meetup_rsvps_lines"
+//    environment "KAFKA_CLIENT_ID", "meetup_rsvp_client"
 }
 
 
-// Redefine where 'tar' should place the resulted Tar file
+// Redefine where 'tar' should be placed the resulted Tar file
 distTar {
     destinationDir = file('docker-build')
 }

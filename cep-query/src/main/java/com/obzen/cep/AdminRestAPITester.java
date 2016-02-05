@@ -103,6 +103,8 @@ public class AdminRestAPITester {
         System.out.println("Stopping a component with definition Id: " + defId);
 
         WeakRestClient.RestResponse res24 = WeakRestClient.delete(targetUrl + "/" + defId)
+            .setConnectionTimeout(600000)
+            .setSocketTimeout(600000)
             .execute();
         System.out.println(res24.responseBody);
     }

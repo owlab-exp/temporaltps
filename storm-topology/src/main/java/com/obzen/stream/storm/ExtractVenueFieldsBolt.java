@@ -32,40 +32,54 @@ public class ExtractVenueFieldsBolt extends BaseRichBolt {
     
     @Override
     public void execute(Tuple tuple) {
-        String jsonStr = tuple.getString(0);
-        logger.info("tuple:0: {}" + jsonStr);
-
-        Object obj = null;
+        String jsonStr = null;
         try {
-            obj = parser.parse(jsonStr);
-        } catch(ParseException pe) {
-            logger.error("Error: {}", pe.getMessage());
+            jsonStr = tuple.getString(0);
+            logger.info("tuple:0: {}" + jsonStr);
+
+            Object obj = parser.parse(jsonStr);
+
+            JSONObject json = (JSONObject)obj; //JSONObject => Map
+            //For venue event elements, please refer to http://www.meetup.com/meetup_api/docs/stream/2/open_venues/#http
+            collector.emit(tuple, new Values(
+                        (Long) json.get("timestamp"),
+                        (String) json.get("zip"),
+                        (String) json.get("country"),
+                        (String) json.get("state"),
+                        (String) json.get("city"),
+                        (String) json.get("address_1"),
+                        (String) json.get("address_2"),
+                        (String) json.get("address_3"),
+                        (Double) json.get("lat"),
+                        (Double) json.get("lon"),
+                        (Long) json.get("id"),
+                        (String) json.get("name"),
+                        (String) json.get("phone")
+                        ));
+            collector.ack(tuple);
+        } catch(Exception e) {
+            logger.error("Error while parsing: {}", jsonStr);
+            collector.reportError(e);
         }
 
-        JSONObject json = (JSONObject)obj; //JSONObject => Map
-        collector.emit(tuple, new Values(
-                    (String) json.get("zip"),
-                    (String) json.get("country"),
-                    (String) json.get("city"),
-                    (String) json.get("address_1"),
-                    (String) json.get("name"),
-                    (Long) json.get("id"),
-                    (Long) json.get("mtime")
-                    ));
-
-        collector.ack(tuple);
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(
+                    "timestamp", 
                     "zip", 
                     "country", 
+                    "state", 
                     "city", 
                     "address_1", 
-                    "name", 
+                    "address_2", 
+                    "address_3", 
+                    "lat", 
+                    "lon", 
                     "id", 
-                    "mtime"
+                    "name", 
+                    "phone" 
                     ));
     }
 }
