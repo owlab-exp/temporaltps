@@ -31,7 +31,7 @@
 ## event-feeder
 -----------------------------------------------
 ### Stream source
-MeetUp Stream API들 중 하나(http://stream.meetup.com/2/open_venues?trickle)로부터 이벤트를 전송받아, 한 라인씩 Kafka Topic (**meetup_venue_lines**)으로 전송.
+MeetUp Stream API들 중 하나(<http://stream.meetup.com/2/open_venues?trickle>)로부터 이벤트를 전송받아, 한 라인씩 Kafka Topic (**meetup_venue_lines**)으로 전송.
 스트림 API의 출력은 아래와 같은 명령으로 커맨드라인에서도 확인할 수 있다 (Linux의 경우):  
 
 > curl -i http://stream.meetup.com/2/open_venues?trickle
