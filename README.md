@@ -1,4 +1,4 @@
-# A stream processing example with Storm/Kafka/obzenCEP
+# A stream processing example with Storm/Kafka/obzenCEP - Release 2
 
 ## Overview
 이 프로젝트는 Apache Kafka, Apache Storm 그리고 obzen CEP를 함께 이용하여 실시간 스트림 데이터를  처리하는 간단한 샘플이다,<br>
