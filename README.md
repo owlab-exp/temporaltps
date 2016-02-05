@@ -183,15 +183,15 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
                     "portName" : "meetup_venue_out",
                     "streamId" : "countryAndCityStream"
                 } ],
-                "executionPlan" : [
-                                    "@Plan:name('SimpleVenueCQ01')",
-                                    "define stream venueStream (zip string, country string, city string, address_1 string, name string, id long, mtime long);",
-                                    "   @info(name = 'query') ",
-                                    "   from venueStream[not(zip is null)]#window.time(1 min)",
-                                    "   select country, city, count(city) as cityCount",
-                                    "   group by country, city",
-                                    "   having cityCount > 10",
-                                    "   insert current events into countryAndCityStream ;"
+                "executionPlan" : [ 
+                                    "@Plan:name('SimpleVenueCQ02')", 
+                                    "define stream venueStream (zip string, country string, state string, city string, address_1 string, address_2 string, address_3 string, lat double, lon double, id long, name string, phone string);", 
+                                    "   @info(name = 'query') ", 
+                                    "   from venueStream[not(zip is null) and country != 'us']#window.time(1 min)", 
+                                    "   select country, city, count(city) as cityCount", 
+                                    "   group by country, city", 
+                                    "   having cityCount > 10", 
+                                    "   insert into countryAndCityStream ;"
                 ],
                 "useJunction" : false,
                 "snapshotIntervalMinutes" : 5,
