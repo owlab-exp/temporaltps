@@ -27,6 +27,13 @@
 
 > ssh-add ~/.vagrant.d/insecure_private_key
 
+사용된 소프트웨어 및 버전 정보
+
+| software | version | remark |
+|----------|---------|--------|
+| Java | Oracle JDK 8 | |
+| Gradel | > 2.5 | |
+| Fleetctl | > 0.11.5 | (Linux에 별도로 설치할 경우) |
 
 ## event-feeder
 -----------------------------------------------
