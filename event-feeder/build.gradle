@@ -1,7 +1,5 @@
 apply plugin: 'application'
 
-version '0.8-SNAPSHOT'
-
 ext {
     kafkaClientVersion = '0.8.2.2'
 }

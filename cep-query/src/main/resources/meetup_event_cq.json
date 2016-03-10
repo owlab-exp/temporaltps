@@ -10,12 +10,12 @@
         "startupOptions" : {
             "config" : {
                 "inputPorts" : [ {
-                    "adapterProviderName" : "KafkaAdapterProvider",
+                    "adapterProviderName" : "KafkaSimplerAdapterProvider",
                     "portName" : "meetup_venue_events",
                     "streamId" : "venueStream"
                 } ],
                 "outputPorts" : [ {
-                    "adapterProviderName" : "KafkaAdapterProvider",
+                    "adapterProviderName" : "KafkaSimplerAdapterProvider",
                     "portName" : "meetup_venue_out",
                     "streamId" : "countryAndCityStream"
                 } ],

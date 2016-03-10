@@ -1,10 +1,25 @@
 allprojects {
     apply plugin: 'java'
 
+    version '0.9-SNAPSHOT'
+
     repositories {
-        mavenLocal()
-        mavenCentral()
         jcenter()
+
+        //obzen maven central proxy
+        maven {
+            url 'http://192.168.10.81:8081/content/repositories/central/'
+        }
+
+        //obzen snapshot
+        maven {
+            url 'http://192.168.10.81:8081/content/repositories/snapshots/'
+        }
+
+        //obzen release
+        maven {
+            url 'http://192.168.10.81:8081/content/repositories/releases/'
+        }
     }
 
     dependencies {

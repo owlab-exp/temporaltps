@@ -47,7 +47,7 @@ public class AdminRestAPITester {
             System.exit(0);
         } 
 
-        String targetUrl = "http://" + options.valueOf(restHost) + "/rest/nodes/" + options.valueOf(node) + "/services";
+        String targetUrl = "http://" + options.valueOf(restHost) + "/rest/nodes/" + options.valueOf(node) + "/instances";
         System.out.println("Given target service: " + targetUrl);
         String filePath = options.valueOf(compJson);
         String command = options.valueOf(cmd);
