@@ -220,7 +220,7 @@ Storm클러스터에 deploy된 토폴로지들의 확인;
 
 ### Run in a remote obzenCEP
 위 Json 파일의 내용은 obzenCEP에서 제공하는 RESTful API를 이용하여 obzenCEP로 전송되어야 한다.<br> 
-이 때 URL end point는 **http://172.17.8.101:8082/rest/nodes/node.172.17.8.101.5800/services** 이고, HTTTP method는 PUT을 이용한다.<br>
+이 때 URL end point는 **http://172.17.8.101:8082/rest/nodes/node.172.17.8.101.5800/instances** 이고, HTTTP method는 PUT을 이용한다.<br>
 이를 위한 간단한 프로그램이 **cep-query/src/main/java/com/obzen/cep/AdminRestAPITester.java** 이다.
 
 이 프로그램을 Gradle에서 수행하기 위해서는 다음의 명령을 사용한다.
@@ -241,4 +241,4 @@ CEP의 처리결과를 조회하기 위한 간단한 Kafka Reader이다.<br>
 
 ### Run in Gradle
 
-> gradle run -Pargs="-z 172.17.8.101:2181 -k 172.17.8.101:9092 -t meetup_venue_out -g test-group"
+> gradle run -Pargs="-k 172.17.8.101:9092 -t meetup_venue_out -g test-group"

@@ -7,6 +7,7 @@ allprojects {
         jcenter()
 
         //obzen maven central proxy
+        //instead of mavenCentral()
         maven {
             url 'http://192.168.10.81:8081/content/repositories/central/'
         }
