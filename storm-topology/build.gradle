@@ -38,7 +38,6 @@ dependencies {
     compile "org.apache.kafka:kafka-clients:$kafkaClientVersion"
     compile "net.sf.jopt-simple:jopt-simple:4.9"
 
-    // From maven local repository!
     compile('com.obzen:cep-event-serializer:3.1.0-SNAPSHOT') {
         exclude module: 'slf4j-api'
         exclude module: 'slf4j-log4j12'
